@@ -1,0 +1,40 @@
+[
+    {
+        "constant": false,
+        "inputs": [
+            {"name": "_name", "type": "string"},
+            {"name": "_age", "type": "uint8"},
+            {"name": "_gender", "type": "string"},
+            {"name": "_usn", "type": "string"},
+            {"name": "_semester", "type": "string"},
+            {"name": "_dataHash", "type": "string"}
+        ],
+        "name": "logData",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getAllData",
+        "outputs": [
+            {
+                "components": [
+                    {"name": "name", "type": "string"},
+                    {"name": "age", "type": "uint8"},
+                    {"name": "gender", "type": "string"},
+                    {"name": "usn", "type": "string"},
+                    {"name": "semester", "type": "string"},
+                    {"name": "dataHash", "type": "string"}
+                ],
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

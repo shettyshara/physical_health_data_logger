@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Physical Health Data Logger</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f7;
+            margin: 0;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #34495e;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .navbar ul li {
+            margin-left: 20px;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 5px;
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        .container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: calc(100% - 10px);
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #27ae60;
+        }
+
+        #status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .footer {
+            background-color: #34495e;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Physical Health Logger</h1>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="view.html">View Data</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="header">
+        <h1>Welcome to Physical Health Data Logger</h1>
+        <p>Enter the following details</p>
+    </div>
+
+    <div class="container">
+        <div id="status"></div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" placeholder="Enter age">
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <input type="text" id="gender" placeholder="Enter gender">
+        </div>
+        <div class="form-group">
+            <label for="usn">USN:</label>
+            <input type="text" id="usn" placeholder="Enter USN">
+        </div>
+        <div class="form-group">
+            <label for="height">Height:</label>
+            <input type="text" id="height" placeholder="Enter height">
+        </div>
+        <div class="form-group">
+            <label for="weight">Weight:</label>
+            <input type="text" id="weight" placeholder="Enter weight">
+        </div>
+        <div class="form-group">
+            <label for="bloodGroup">Blood Group:</label>
+            <input type="text" id="bloodGroup" placeholder="Enter blood group">
+        </div>
+        <div class="form-group">
+            <button onclick="logData()">Log Data</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2024 Physical Health Data Logger. All rights reserved.
+    </div>
+
+    <script>
+        const web3 = new Web3(Web3.givenProvider || "http://127.0.0.1:8545");
+
+        const contractABI = [
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "age",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "gender",
+                        "type": "string"
+                    },
+                    {
+                        "name": "usn",
+                        "type": "string"
+                    },
+                    {
+                        "name": "height",
+                        "type": "string"
+                    },
+                    {
+                        "name": "weight",
+                        "type": "string"
+                    },
+                    {
+                        "name": "bloodGroup",
+                        "type": "string"
+                    }
+                ],
+                "name": "logData",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        const contractAddress = "0xA10E3808DFAf066F1Fc41543Af443e55e53919b4";
+        const healthDataLogger = new web3.eth.Contract(contractABI, contractAddress);
+
+        async function logData() {
+            const name = document.getElementById("name").value;
+            const age = document.getElementById("age").value;
+            const gender = document.getElementById("gender").value;
+            const usn = document.getElementById("usn").value;
+            const height = document.getElementById("height").value;
+            const weight = document.getElementById("weight").value;
+            const bloodGroup = document.getElementById("bloodGroup").value;
+
+            const accounts = await web3.eth.getAccounts();
+            document.getElementById("status").innerText = "Logging data...";
+
+                        // Send data to the smart contract
+                        await healthDataLogger.methods.logData(name, age, gender, usn, height, weight, bloodGroup).send({ from: accounts[0] })
+                .then(receipt => {
+                    document.getElementById("status").innerText = "Data logged on blockchain!";
+                })
+                .catch(error => {
+                    document.getElementById("status").innerText = "Error logging data on blockchain.";
+                    console.error(error);
+                });
+
+            // Send full data to the server/database
+            fetch('http://localhost:3000/logData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, age, gender, usn, height, weight, bloodGroup }),
+            }).then(response => response.text())
+                .then(data => {
+                    document.getElementById("status").innerText += " Data logged in database!";
+                })
+                .catch(error => {
+                    document.getElementById("status").innerText += " Error logging data in database.";
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>
+
